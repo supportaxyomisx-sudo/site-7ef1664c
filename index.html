@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>24 Hour Fitness Outdoor Gym</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        heading: ['Oswald', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+      },
+      colors: {
+        primary: '#FF4D00',
+        accent: '#FF6B2C',
+        dark: {
+          900: '#0A0A0A',
+          800: '#111111',
+          700: '#1A1A1A',
+          600: '#222222',
+          500: '#2A2A2A',
+        }
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; background: #0A0A0A; color: #fff; }
+  h1, h2, h3, h4, h5, h6 { font-family: 'Oswald', sans-serif; }
+
+  .reveal { opacity: 0; transform: translateY(60px); transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal.active { opacity: 1; transform: translateY(0); }
+  .reveal-left { opacity: 0; transform: translateX(-60px); transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal-left.active { opacity: 1; transform: translateX(0); }
+  .reveal-right { opacity: 0; transform: translateX(60px); transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal-right.active { opacity: 1; transform: translateX(0); }
+  .reveal-scale { opacity: 0; transform: scale(0.85); transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal-scale.active { opacity: 1; transform: scale(1); }
+
+  .hero-bg {
+    background: linear-gradient(135deg, #0A0A0A 0%, #1a0a00 50%, #0A0A0A 100%);
+    position: relative; overflow: hidden;
+  }
+  .hero-bg::before {
+    content: ''; position: absolute; inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900"><defs><radialGradient id="g" cx="70%25" cy="40%25" r="60%25"><stop offset="0%25" stop-color="%23FF4D00" stop-opacity="0.15"/><stop offset="100%25" stop-color="%23FF4D00" stop-opacity="0"/></radialGradient></defs><rect fill="url(%23g)" width="1440" height="900"/></svg>');
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.03;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .stat-counter { display: inline-block; }
+
+  .card-glow { position: relative; }
+  .card-glow::before {
+    content: ''; position: absolute; inset: -1px; border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255,77,0,0.3), transparent 50%);
+    opacity: 0; transition: opacity 0.4s; z-index: -1;
+  }
+  .card-glow:hover::before { opacity: 1; }
+
+  .nav-scrolled { background: rgba(10,10,10,0.95) !important; backdrop-filter: blur(20px); }
+
+  .pulse-dot { animation: pulse 2s infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+
+  .float-animation { animation: float 6s ease-in-out infinite; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  .line-grow { transform: scaleX(0); transform-origin: left; transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1); }
+  .line-grow.active { transform: scaleX(1); }
+
+  .parallax-slow { will-change: transform; }
+
+  .shimmer {
+    background: linear-gradient(110deg, transparent 33%, rgba(255,255,255,0.03) 50%, transparent 67%);
+    background-size: 300% 100%;
+    animation: shimmer 3s infinite;
+  }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  .marquee { animation: marquee 30s linear infinite; }
+  @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  .hover-lift { transition: transform 0.3s, box-shadow 0.3s; }
+  .hover-lift:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(255,77,0,0.15); }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #FF4D00, #FF6B2C);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .video-overlay {
+    background: linear-gradient(to bottom, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0.7) 50%, #0A0A0A 100%);
+  }
+
+  .scroll-indicator { animation: scrollBounce 2s infinite; }
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+  }
+
+  .pricing-popular { border: 2px solid #FF4D00; }
+
+  .hamburger span { transition: all 0.3s; }
+</style>
+</head>
+
+<body class="antialiased">
+
+<!-- NAVBAR -->
+<nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-500 py-5">
+  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-3 group">
+      <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center font-heading font-bold text-xl group-hover:rotate-12 transition-transform">G</div>
+      <span class="font-heading text-2xl font-bold tracking-wider">24 Hour Fitness Outdoor Gym</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#about" class="text-sm uppercase tracking-widest hover:text-primary transition-colors">About</a>
+      <a href="#classes" class="text-sm uppercase tracking-widest hover:text-primary transition-colors">Classes</a>
+      <a href="#trainers" class="text-sm uppercase tracking-widest hover:text-primary transition-colors">Trainers</a>
+      <a href="#pricing" class="text-sm uppercase tracking-widest hover:text-primary transition-colors">Pricing</a>
+      <a href="#contact" class="text-sm uppercase tracking-widest hover:text-primary transition-colors">Contact</a>
+      <a href="#pricing" class="bg-primary hover:bg-accent text-white px-6 py-3 text-sm font-semibold uppercase tracking-wider rounded transition-all hover:shadow-lg hover:shadow-primary/30">Join Now</a>
+    </div>
+    <button id="menuBtn" class="md:hidden flex flex-col gap-1.5 p-2">
+      <span class="w-6 h-0.5 bg-white"></span>
+      <span class="w-6 h-0.5 bg-white"></span>
+      <span class="w-4 h-0.5 bg-white"></span>
+    </button>
+  </div>
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="hidden md:hidden bg-dark-800/95 backdrop-blur-xl mt-4 mx-4 rounded-2xl p-6">
+    <a href="#about" class="block py-3 text-lg uppercase tracking-wider hover:text-primary">About</a>
+    <a href="#classes" class="block py-3 text-lg uppercase tracking-wider hover:text-primary">Classes</a>
+    <a href="#trainers" class="block py-3 text-lg uppercase tracking-wider hover:text-primary">Trainers</a>
+    <a href="#pricing" class="block py-3 text-lg uppercase tracking-wider hover:text-primary">Pricing</a>
+    <a href="#contact" class="block py-3 text-lg uppercase tracking-wider hover:text-primary">Contact</a>
+    <a href="#pricing" class="block mt-4 bg-primary text-center py-3 rounded-lg font-semibold uppercase">Join Now</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-bg min-h-screen flex items-center relative">
+  <div class="hero-grid"></div>
+  <!-- Animated Orbs -->
+  <div class="absolute top-20 right-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl float-animation"></div>
+  <div class="absolute bottom-20 left-20 w-72 h-72 bg-primary/5 rounded-full blur-3xl float-animation" style="animation-delay:-3s"></div>
+
+  <!-- Discount Banner -->
+  <div class="absolute top-24 left-1/2 -translate-x-1/2 z-10">
+    <div class="bg-primary/20 border border-primary/40 rounded-full px-6 py-2 flex items-center gap-2">
+      <span class="pulse-dot w-2 h-2 bg-primary rounded-full"></span>
+      <span class="text-sm font-medium">Limited Time Offer: 10% Off Membership</span>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 pt-32 pb-20 relative z-10">
+    <div class="max-w-4xl">
+      <p class="text-primary font-semibold uppercase tracking-[0.3em] mb-6 reveal">Sweat Under the Sun</p>
+      <h1 class="font-heading text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.9] mb-8">
+        <span class="reveal" style="transition-delay:0.1s">PUSH</span><br>
+        <span class="reveal" style="transition-delay:0.2s">BEYOND</span><br>
+        <span class="gradient-text reveal" style="transition-delay:0.3s">YOUR LIMITS</span>
+      </h1>
+      <p class="text-xl text-gray-400 max-w-lg mb-10 reveal" style="transition-delay:0.4s">
+        Transform your body, elevate your mind, and become the strongest version of yourself.
+      </p>
+      <div class="flex flex-wrap gap-4 reveal" style="transition-delay:0.5s">
+        <a href="#pricing" class="bg-primary hover:bg-accent text-white px-10 py-5 text-sm font-bold uppercase tracking-widest rounded transition-all hover:shadow-xl hover:shadow-primary/30 inline-flex items-center gap-3">
+          Join Now
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <a href="#classes" class="border border-white/20 hover:border-primary/50 text-white px-10 py-5 text-sm font-bold uppercase tracking-widest rounded transition-all inline-flex items-center gap-3">
+          Learn More
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 scroll-indicator">
+    <span class="text-xs uppercase tracking-widest text-gray-500">Scroll</span>
+    <div class="w-px h-12 bg-gradient-to-b from-primary to-transparent"></div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<section class="bg-dark-800 border-y border-white/5 py-16 relative overflow-hidden">
+  <div class="absolute inset-0 shimmer"></div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div class="text-center reveal" style="transition-delay:0s">
+        <div class="font-heading text-5xl md:text-6xl font-bold gradient-text mb-2" data-count="1000">1000</div>
+        <div class="text-sm uppercase tracking-widest text-gray-400">Members</div>
+      </div>
+      <div class="text-center reveal" style="transition-delay:0.1s">
+        <div class="font-heading text-5xl md:text-6xl font-bold gradient-text mb-2" data-count="50">50</div>
+        <div class="text-sm uppercase tracking-widest text-gray-400">Classes Per Week</div>
+      </div>
+      <div class="text-center reveal" style="transition-delay:0.2s">
+        <div class="font-heading text-5xl md:text-6xl font-bold gradient-text mb-2" data-count="5000">5000</div>
+        <div class="text-sm uppercase tracking-widest text-gray-400">Square Feet of Outdoor Space</div>
+      </div>
+      <div class="text-center reveal" style="transition-delay:0.3s">
+        <div class="font-heading text-5xl md:text-6xl font-bold gradient-text mb-2" data-count="24/7">24/7</div>
+        <div class="text-sm uppercase tracking-widest text-gray-400">Hours of Operation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="py-28 relative overflow-hidden">
+  <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl"></div>
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div class="reveal-left">
+        <p class="text-primary font-semibold uppercase tracking-[0.3em] mb-4">Who We Are</p>
+        <h2 class="font-heading text-5xl md:text-7xl font-bold leading-[0.95] mb-8">About Us</h2>
+        <div class="w-20 h-1 bg-primary mb-8 line-grow"></div>
+        <p class="text-gray-400 text-lg leading-relaxed mb-8">24 Hour Fitness Outdoor Gym is a state-of-the-art outdoor gym located in the heart of Denver, Colorado. Our mission is to provide a unique and effective workout experience for our members.</p>
+        <div class="flex gap-8">
+          <div class="border-l-2 border-primary pl-4">
+            <div class="font-heading text-3xl font-bold gradient-text">15+</div>
+            <div class="text-sm text-gray-500 uppercase tracking-wider">Years Experience</div>
+          </div>
+          <div class="border-l-2 border-primary pl-4">
+            <div class="font-heading text-3xl font-bold gradient-text">50+</div>
+            <div class="text-sm text-gray-500 uppercase tracking-wider">Expert Trainers</div>
+          </div>
+        </div>
+      </div>
+      <div class="relative reveal-right">
+        <div class="aspect-[4/5] rounded-3xl overflow-hidden bg-dark-700 relative">
+          <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent z-10"></div>
+          <div class="w-full h-full flex items-center justify-center">
+            <svg class="w-24 h-24 text-primary/30" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          </div>
+        </div>
+        <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center float-animation">
+          <span class="font-heading text-4xl font-bold gradient-text">100%</span>
+        </div>
+        <div class="absolute -top-6 -right-6 w-24 h-24 bg-dark-700 rounded-2xl border border-white/10 flex items-center justify-center float-animation" style="animation-delay:-2s">
+          <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="bg-dark-800 py-5 overflow-hidden border-y border-white/5">
+  <div class="flex whitespace-nowrap marquee">
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">Strength</span>
+    <span class="text-primary text-3xl">✦</span>
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">Cardio</span>
+    <span class="text-primary text-3xl">✦</span>
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">HIIT</span>
+    <span class="text-primary text-3xl">✦</span>
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">Yoga</span>
+    <span class="text-primary text-3xl">✦</span>
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">Boxing</span>
+    <span class="text-primary text-3xl">✦</span>
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">Recovery</span>
+    <span class="text-primary text-3xl">✦</span>
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">Strength</span>
+    <span class="text-primary text-3xl">✦</span>
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">Cardio</span>
+    <span class="text-primary text-3xl">✦</span>
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">HIIT</span>
+    <span class="text-primary text-3xl">✦</span>
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">Yoga</span>
+    <span class="text-primary text-3xl">✦</span>
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">Boxing</span>
+    <span class="text-primary text-3xl">✦</span>
+    <span class="text-3xl font-heading font-bold text-white/5 uppercase tracking-widest mx-8">Recovery</span>
+    <span class="text-primary text-3xl">✦</span>
+  </div>
+</div>
+
+<!-- CLASSES -->
+<section id="classes" class="py-28 relative">
+  <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl"></div>
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-20">
+      <p class="text-primary font-semibold uppercase tracking-[0.3em] mb-4 reveal">Our Programs</p>
+      <h2 class="font-heading text-5xl md:text-7xl font-bold reveal" style="transition-delay:0.1s">CLASS <span class="gradient-text">SCHEDULE</span></h2>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Class 0 -->
+      <div class="group bg-dark-700 rounded-2xl overflow-hidden card-glow hover-lift reveal-scale" style="transition-delay:0s">
+        <div class="h-48 bg-gradient-to-br from-primary/20 to-dark-800 relative overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg class="w-16 h-16 text-primary/40 group-hover:scale-125 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <div class="absolute top-4 right-4 bg-dark-900/80 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Beginner</div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-heading text-2xl font-bold mb-2">Yoga</h3>
+          <p class="text-gray-400 text-sm mb-4">A 60-minute yoga class designed for beginners</p>
+          <div class="flex items-center justify-between">
+            <span class="text-primary text-sm font-semibold">8:00 AM</span>
+            <a href="#pricing" class="text-sm uppercase tracking-wider hover:text-primary transition-colors">Join Now →</a>
+          </div>
+        </div>
+      </div>
+      <!-- Class 1 -->
+      <div class="group bg-dark-700 rounded-2xl overflow-hidden card-glow hover-lift reveal-scale" style="transition-delay:0.1s">
+        <div class="h-48 bg-gradient-to-br from-primary/20 to-dark-800 relative overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg class="w-16 h-16 text-primary/40 group-hover:scale-125 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
+          </div>
+          <div class="absolute top-4 right-4 bg-dark-900/80 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Intermediate</div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-heading text-2xl font-bold mb-2">Pilates</h3>
+          <p class="text-gray-400 text-sm mb-4">A 60-minute Pilates class designed for intermediate levels</p>
+          <div class="flex items-center justify-between">
+            <span class="text-primary text-sm font-semibold">10:00 AM</span>
+            <a href="#pricing" class="text-sm uppercase tracking-wider hover:text-primary transition-colors">Join Now →</a>
+          </div>
+        </div>
+      </div>
+      <!-- Class 2 -->
+      <div class="group bg-dark-700 rounded-2xl overflow-hidden card-glow hover-lift reveal-scale" style="transition-delay:0.2s">
+        <div class="h-48 bg-gradient-to-br from-primary/20 to-dark-800 relative overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg class="w-16 h-16 text-primary/40 group-hover:scale-125 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+          </div>
+          <div class="absolute top-4 right-4 bg-dark-900/80 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Advanced</div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-heading text-2xl font-bold mb-2">HIIT</h3>
+          <p class="text-gray-400 text-sm mb-4">A 60-minute high-intensity interval training class</p>
+          <div class="flex items-center justify-between">
+            <span class="text-primary text-sm font-semibold">12:00 PM</span>
+            <a href="#pricing" class="text-sm uppercase tracking-wider hover:text-primary transition-colors">Join Now →</a>
+          </div>
+        </div>
+      </div>
+      <!-- Class 3 -->
+      <div class="group bg-dark-700 rounded-2xl overflow-hidden card-glow hover-lift reveal-scale" style="transition-delay:0.3s">
+        <div class="h-48 bg-gradient-to-br from-primary/20 to-dark-800 relative overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg class="w-16 h-16 text-primary/40 group-hover:scale-125 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z"/></svg>
+          </div>
+          <div class="absolute top-4 right-4 bg-dark-900/80 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Beginner</div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-heading text-2xl font-bold mb-2">Zumba</h3>
+          <p class="text-gray-400 text-sm mb-4">A 60-minute Zumba class designed for beginners</p>
+          <div class="flex items-center justify-between">
+            <span class="text-primary text-sm font-semibold">2:00 PM</span>
+            <a href="#pricing" class="text-sm uppercase tracking-wider hover:text-primary transition-colors">Join Now →</a>
+          </div>
+        </div>
+      </div>
+      <!-- Class 4 -->
+      <div class="group bg-dark-700 rounded-2xl overflow-hidden card-glow hover-lift reveal-scale" style="transition-delay:0.4s">
+        <div class="h-48 bg-gradient-to-br from-primary/20 to-dark-800 relative overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg class="w-16 h-16 text-primary/40 group-hover:scale-125 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+          </div>
+          <div class="absolute top-4 right-4 bg-dark-900/80 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Intermediate</div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-heading text-2xl font-bold mb-2">Cycling</h3>
+          <p class="text-gray-400 text-sm mb-4">A 60-minute cycling class designed for intermediate levels</p>
+          <div class="flex items-center justify-between">
+            <span class="text-primary text-sm font-semibold">4:00 PM</span>
+            <a href="#pricing" class="text-sm uppercase tracking-wider hover:text-primary transition-colors">Join Now →</a>
+          </div>
+        </div>
+      </div>
+      <!-- Class 5 -->
+      <div class="group bg-dark-700 rounded-2xl overflow-hidden card-glow hover-lift reveal-scale" style="transition-delay:0.5s">
+        <div class="h-48 bg-gradient-to-br from-primary/20 to-dark-800 relative overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg class="w-16 h-16 text-primary/40 group-hover:scale-125 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+          </div>
+          <div class="absolute top-4 right-4 bg-dark-900/80 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Advanced</div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-heading text-2xl font-bold mb-2">Strength Training</h3>
+          <p class="text-gray-400 text-sm mb-4">A 60-minute strength training class</p>
+          <div class="flex items-center justify-between">
+            <span class="text-primary text-sm font-semibold">6:00 PM</span>
+            <a href="#pricing" class="text-sm uppercase tracking-wider hover:text-primary transition-colors">Join Now →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAINERS -->
+<section id="trainers" class="py-28 bg-dark-800 relative overflow-hidden">
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl"></div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10">
+    <div class="text-center mb-20">
+      <p class="text-primary font-semibold uppercase tracking-[0.3em] mb-4 reveal">Meet The Team</p>
+      <h2 class="font-heading text-5xl md:text-7xl font-bold reveal" style="transition-delay:0.1s">OUR <span class="gradient-text">TRAINERS</span></h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Trainer 0 -->
+      <div class="group reveal-scale" style="transition-delay:0s">
+        <div class="relative rounded-3xl overflow-hidden mb-6">
+          <div class="aspect-[3/4] bg-gradient-to-br from-dark-600 to-dark-800 flex items-center justify-center">
+            <svg class="w-20 h-20 text-primary/20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <div class="flex gap-3">
+              <a href="https://instagram.com/24hourfitnessoutdoorgym" class="w-10 h-10 bg-white/10 backdrop-blur rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <h3 class="font-heading text-2xl font-bold">John Doe</h3>
+        <p class="text-primary text-sm uppercase tracking-wider mb-2">Personal Trainer</p>
+        <p class="text-gray-400 text-sm">Certified personal trainer with 5 years of experience</p>
+      </div>
+      <!-- Trainer 1 -->
+      <div class="group reveal-scale" style="transition-delay:0.15s">
+        <div class="relative rounded-3xl overflow-hidden mb-6">
+          <div class="aspect-[3/4] bg-gradient-to-br from-dark-600 to-dark-800 flex items-center justify-center">
+            <svg class="w-20 h-20 text-primary/20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <div class="flex gap-3">
+              <a href="https://instagram.com/24hourfitnessoutdoorgym" class="w-10 h-10 bg-white/10 backdrop-blur rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <h3 class="font-heading text-2xl font-bold">Jane Smith</h3>
+        <p class="text-primary text-sm uppercase tracking-wider mb-2">Group Fitness Instructor</p>
+        <p class="text-gray-400 text-sm">Certified group fitness instructor with 3 years of experience</p>
+      </div>
+      <!-- Trainer 2 -->
+      <div class="group reveal-scale" style="transition-delay:0.3s">
+        <div class="relative rounded-3xl overflow-hidden mb-6">
+          <div class="aspect-[3/4] bg-gradient-to-br from-dark-600 to-dark-800 flex items-center justify-center">
+            <svg class="w-20 h-20 text-primary/20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <div class="flex gap-3">
+              <a href="https://instagram.com/24hourfitnessoutdoorgym" class="w-10 h-10 bg-white/10 backdrop-blur rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <h3 class="font-heading text-2xl font-bold">Bob Johnson</h3>
+        <p class="text-primary text-sm uppercase tracking-wider mb-2">Yoga Instructor</p>
+        <p class="text-gray-400 text-sm">Certified yoga instructor with 10 years of experience</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="py-28 relative overflow-hidden">
+  <div class="absolute top-20 right-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10">
+    <div class="text-center mb-20">
+      <p class="text-primary font-semibold uppercase tracking-[0.3em] mb-4 reveal">Choose Your Path</p>
+      <h2 class="font-heading text-5xl md:text-7xl font-bold reveal" style="transition-delay:0.1s">MEMBERSHIP <span class="gradient-text">PLANS</span></h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <!-- Plan 0 -->
+      <div class="bg-dark-700 rounded-3xl p-8 border border-white/5 hover-lift reveal" style="transition-delay:0s">
+        <h3 class="font-heading text-xl uppercase tracking-wider mb-2">Basic</h3>
+        <p class="text-gray-400 text-sm mb-6">Access to outdoor gym and group fitness classes</p>
+        <div class="mb-8">
+          <span class="font-heading text-5xl font-bold">29.99</span>
+          <span class="text-gray-500">/month</span>
+        </div>
+        <div class="space-y-4 mb-8">
+          Outdoor Gym Access,Group Fitness Classes
+        </div>
+        <a href="#contact" class="block w-full text-center bg-dark-600 hover:bg-primary text-white py-4 rounded-xl font-semibold uppercase tracking-wider text-sm transition-all">Select Plan</a>
+      </div>
+      <!-- Plan 1 (Popular) -->
+      <div class="bg-dark-700 rounded-3xl p-8 pricing-popular hover-lift relative reveal" style="transition-delay:0.15s">
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary px-6 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Most Popular</div>
+        <h3 class="font-heading text-xl uppercase tracking-wider mb-2">Premium</h3>
+        <p class="text-gray-400 text-sm mb-6">Access to outdoor gym, group fitness classes, and personal training sessions</p>
+        <div class="mb-8">
+          <span class="font-heading text-5xl font-bold gradient-text">49.99</span>
+          <span class="text-gray-500">/month</span>
+        </div>
+        <div class="space-y-4 mb-8">
+          Outdoor Gym Access,Group Fitness Classes,Personal Training Sessions
+        </div>
+        <a href="#contact" class="block w-full text-center bg-primary hover:bg-accent text-white py-4 rounded-xl font-semibold uppercase tracking-wider text-sm transition-all shadow-lg shadow-primary/30">Select Plan</a>
+      </div>
+      <!-- Plan 2 -->
+      <div class="bg-dark-700 rounded-3xl p-8 border border-white/5 hover-lift reveal" style="transition-delay:0.3s">
+        <h3 class="font-heading text-xl uppercase tracking-wider mb-2">Elite</h3>
+        <p class="text-gray-400 text-sm mb-6">Access to outdoor gym, group fitness classes, personal training sessions, and small group training sessions</p>
+        <div class="mb-8">
+          <span class="font-heading text-5xl font-bold">99.99</span>
+          <span class="text-gray-500">/month</span>
+        </div>
+        <div class="space-y-4 mb-8">
+          Outdoor Gym Access,Group Fitness Classes,Personal Training Sessions,Small Group Training Sessions
+        </div>
+        <a href="#contact" class="block w-full text-center bg-dark-600 hover:bg-primary text-white py-4 rounded-xl font-semibold uppercase tracking-wider text-sm transition-all">Select Plan</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="py-28 bg-dark-800 relative overflow-hidden">
+  <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl"></div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10">
+    <div class="text-center mb-20">
+      <p class="text-primary font-semibold uppercase tracking-[0.3em] mb-4 reveal">Real Results</p>
+      <h2 class="font-heading text-5xl md:text-7xl font-bold reveal" style="transition-delay:0.1s">WHAT THEY <span class="gradient-text">SAY</span></h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Testimonial 0 -->
+      <div class="bg-dark-700 rounded-3xl p-8 border border-white/5 hover-lift reveal-scale" style="transition-delay:0s">
+        <div class="flex gap-1 mb-6">
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="text-gray-300 mb-6 leading-relaxed">"{{TESTIMONIAL_0_TEXT}}"</p>
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+            <span class="font-heading font-bold text-primary">{{TESTIMONIAL_0_NAME}}</span>
+          </div>
+          <div>
+            <div class="font-semibold">{{TESTIMONIAL_0_NAME}}</div>
+            <div class="text-sm text-gray-500">Member</div>
+          </div>
+        </div>
+      </div>
+      <!-- Testimonial 1 -->
+      <div class="bg-dark-700 rounded-3xl p-8 border border-white/5 hover-lift reveal-scale" style="transition-delay:0.15s">
+        <div class="flex gap-1 mb-6">
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="text-gray-300 mb-6 leading-relaxed">"{{TESTIMONIAL_1_TEXT}}"</p>
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+            <span class="font-heading font-bold text-primary">{{TESTIMONIAL_1_NAME}}</span>
+          </div>
+          <div>
+            <div class="font-semibold">{{TESTIMONIAL_1_NAME}}</div>
+            <div class="text-sm text-gray-500">Member</div>
+          </div>
+        </div>
+      </div>
+      <!-- Testimonial 2 -->
+      <div class="bg-dark-700 rounded-3xl p-8 border border-white/5 hover-lift reveal-scale" style="transition-delay:0.3s">
+        <div class="flex gap-1 mb-6">
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="text-gray-300 mb-6 leading-relaxed">"{{TESTIMONIAL_2_TEXT}}"</p>
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+            <span class="font-heading font-bold text-primary">{{TESTIMONIAL_2_NAME}}</span>
+          </div>
+          <div>
+            <div class="font-semibold">{{TESTIMONIAL_2_NAME}}</div>
+            <div class="text-sm text-gray-500">Member</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="py-28 relative overflow-hidden">
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl"></div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10">
+    <div class="text-center mb-20">
+      <p class="text-primary font-semibold uppercase tracking-[0.3em] mb-4 reveal">Get In Touch</p>
+      <h2 class="font-heading text-5xl md:text-7xl font-bold reveal" style="transition-delay:0.1s">CONTACT <span class="gradient-text">US</span></h2>
+    </div>
+    <div class="grid md:grid-cols-2 gap-12">
+      <!-- Contact Info -->
+      <div class="space-y-8 reveal-left">
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div>
+            <h4 class="font-heading text-lg font-bold mb-1">Address</h4>
+            <p class="text-gray-400">{{ADDRESS}}, {{CITY}}, {{COUNTRY}}</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          </div>
+          <div>
+            <h4 class="font-heading text-lg font-bold mb-1">Phone</h4>
+            <p class="text-gray-400">{{PHONE}}</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <div>
+            <h4 class="font-heading text-lg font-bold mb-1">Email</h4>
+            <p class="text-gray-400">{{EMAIL}}</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <h4 class="font-heading text-lg font-bold mb-1">Hours</h4>
+            <p class="text-gray-400">{{HOURS}}</p>
+          </div>
+        </div>
+        <!-- Map Embed -->
+        <div class="rounded-2xl overflow-hidden border border-white/10 mt-8">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.7!2d{{MAP_LNG}}!3d{{MAP_LAT}}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z{{MAP_LAT}},{{MAP_LNG}}!5e0!3m2!1sen!2s!4v1"
+            width="100%" height="200" style="border:0; filter: grayscale(1) invert(0.9) contrast(1.1);" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+      </div>
+      <!-- Contact Form -->
+      <div class="reveal-right">
+        <form class="bg-dark-700 rounded-3xl p-8 border border-white/5 space-y-6">
+          <div class="grid grid-cols-2 gap-4">
+            <input type="text" placeholder="Your Name" class="bg-dark-600 border border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:border-primary transition-colors w-full">
+            <input type="email" placeholder="Your Email" class="bg-dark-600 border border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:border-primary transition-colors w-full">
+          </div>
+          <select class="bg-dark-600 border border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:border-primary transition-colors w-full text-gray-400">
+            <option>Interest</option>
+            <option>Membership</option>
+            <option>Personal Training</option>
+            <option>Group Classes</option>
+            <option>Other</option>
+          </select>
+          <textarea rows="5" placeholder="Your Message" class="bg-dark-600 border border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:border-primary transition-colors w-full resize-none"></textarea>
+          <button type="submit" class="w-full bg-primary hover:bg-accent text-white py-5 rounded-xl font-semibold uppercase tracking-wider text-sm transition-all hover:shadow-lg hover:shadow-primary/30">
+            Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="py-28 relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-r from-primary/10 via-dark-900 to-primary/10"></div>
+  <div class="max-w-4xl mx-auto px-6 text-center relative z-10 reveal-scale">
+    <h2 class="font-heading text-5xl md:text-7xl font-bold mb-6">READY TO <span class="gradient-text">TRANSFORM?</span></h2>
+    <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">Your journey to a stronger, healthier you starts with a single step. Take it today.</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="#pricing" class="bg-primary hover:bg-accent text-white px-10 py-5 text-sm font-bold uppercase tracking-widest rounded transition-all hover:shadow-xl hover:shadow-primary/30 inline-flex items-center gap-3">
+        Join Now
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+      <a href="https://wa.me/{{WHATSAPP_NUMBER}}" class="border border-white/20 hover:border-primary/50 text-white px-10 py-5 text-sm font-bold uppercase tracking-widest rounded transition-all inline-flex items-center gap-3" target="_blank">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-dark-800 border-t border-white/5 py-16">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid md:grid-cols-4 gap-12 mb-12">
+      <div>
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center font-heading font-bold text-xl">G</div>
+          <span class="font-heading text-2xl font-bold tracking-wider">24 Hour Fitness Outdoor Gym</span>
+        </div>
+        <p class="text-gray-400 text-sm leading-relaxed mb-6">24 Hour Fitness Outdoor Gym is a state-of-the-art outdoor gym located in the heart of Denver, Colorado. Our mission is to provide a unique and effective workout experience for our members.</p>
+        <div class="flex gap-3">
+          <a href="{{FACEBOOK_URL}}" class="w-10 h-10 bg-dark-600 hover:bg-primary rounded-full flex items-center justify-center transition-colors" target="_blank">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a href="https://instagram.com/24hourfitnessoutdoorgym" class="w-10 h-10 bg-dark-600 hover:bg-primary rounded-full flex items-center justify-center transition-colors" target="_blank">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="https://wa.me/{{WHATSAPP_NUMBER}}" class="w-10 h-10 bg-dark-600 hover:bg-primary rounded-full flex items-center justify-center transition-colors" target="_blank">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-heading text-lg font-bold uppercase tracking-wider mb-6">Quick Links</h4>
+        <ul class="space-y-3 text-sm text-gray-400">
+          <li><a href="#about" class="hover:text-primary transition-colors">About Us</a></li>
+          <li><a href="#classes" class="hover:text-primary transition-colors">Classes</a></li>
+          <li><a href="#trainers" class="hover:text-primary transition-colors">Trainers</a></li>
+          <li><a href="#pricing" class="hover:text-primary transition-colors">Pricing</a></li>
+          <li><a href="#contact" class="hover:text-primary transition-colors">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-heading text-lg font-bold uppercase tracking-wider mb-6">Classes</h4>
+        <ul class="space-y-3 text-sm text-gray-400">
+          <li><a href="#classes" class="hover:text-primary transition-colors">Yoga</a></li>
+          <li><a href="#classes" class="hover:text-primary transition-colors">Pilates</a></li>
+          <li><a href="#classes" class="hover:text-primary transition-colors">HIIT</a></li>
+          <li><a href="#classes" class="hover:text-primary transition-colors">Zumba</a></li>
+          <li><a href="#classes" class="hover:text-primary transition-colors">Cycling</a></li>
+          <li><a href="#classes" class="hover:text-primary transition-colors">Strength Training</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-heading text-lg font-bold uppercase tracking-wider mb-6">Hours</h4>
+        <p class="text-gray-400 text-sm leading-relaxed">{{HOURS}}</p>
+        <div class="mt-6 p-4 bg-dark-600 rounded-xl">
+          <p class="text-sm text-gray-400">Need Help?</p>
+          <a href="tel:{{PHONE}}" class="text-primary font-semibold hover:underline">{{PHONE}}</a>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-sm text-gray-500">&copy; 2026 24 Hour Fitness Outdoor Gym. All rights reserved.</p>
+      <div class="flex gap-6 text-sm text-gray-500">
+        <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
+        <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/{{WHATSAPP_NUMBER}}" class="fixed bottom-6 right-6 z-50 w-16 h-16 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center shadow-lg shadow-green-500/30 transition-all hover:scale-110" target="_blank">
+  <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- SCROLL TO TOP -->
+<button id="scrollTop" class="fixed bottom-6 left-6 z-50 w-12 h-12 bg-primary/80 hover:bg-primary rounded-full flex items-center justify-center opacity-0 pointer-events-none transition-all hover:scale-110">
+  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+</button>
+
+<script>
+// Navbar scroll effect
+const navbar = document.getElementById('navbar');
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
+  scrollTopBtn.classList.toggle('opacity-100', window.scrollY > 500);
+  scrollTopBtn.classList.toggle('pointer-events-auto', window.scrollY > 500);
+  scrollTopBtn.classList.toggle('opacity-0', window.scrollY <= 500);
+});
+scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// Mobile menu
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+// Scroll reveal
+const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .line-grow');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+revealElements.forEach(el => revealObserver.observe(el));
+
+// Counter animation
+function animateCounters() {
+  document.querySelectorAll('[data-count]').forEach(counter => {
+    const text = counter.textContent;
+    const match = text.match(/(\d+)/);
+    if (!match) return;
+    const target = parseInt(match[1]);
+    const suffix = text.replace(match[1], '');
+    let current = 0;
+    const increment = target / 60;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) { current = target; clearInterval(timer); }
+      counter.textContent = Math.floor(current) + suffix;
+    }, 30);
+  });
+}
+const statsSection = document.querySelector('.stat-counter') || document.querySelectorAll('[data-count]')[0];
+const statsObserver = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    animateCounters();
+    statsObserver.disconnect();
+  }
+}, { threshold: 0.5 });
+if (document.querySelectorAll('[data-count]').length) {
+  statsObserver.observe(document.querySelectorAll('[data-count]')[0]);
+}
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+</body>
+</html>
